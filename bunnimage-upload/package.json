@@ -1,5 +1,5 @@
 {
-  "name": "emotionalgifs",
+  "name": "bunnimage-upload",
   "version": "1.0.0",
   "description": "",
   "main": "index.js",
@@ -10,7 +10,8 @@
   "author": "",
   "license": "ISC",
   "dependencies": {
-    "node-fetch": "^2.6.1",
+    "@azure/storage-blob": "^12.2.1",
+    "node-fetch": "^3.2.1",
     "parse-multipart": "^1.0.4"
   }
 }
