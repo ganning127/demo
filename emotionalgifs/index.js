@@ -15,18 +15,29 @@ module.exports = async function (context, req) {
     const parts = multipart.Parse(body, boundary);
 
     const result = await analyzeImage(parts[0].data);
+
+    let emotions = result[0].faceAttributes.emotion;
+    let objects = Object.values(emotions);
+    const main_emotion = Object.keys(emotions).find(key => emotions[key] === Math.max(...objects));
+
+    const API_KEY = process.env.GIFKEY;
+    const resp = await fetch("https://api.giphy.com/v1/gifs/translate?api_key=" + API_KEY + "&limit=1&s=" + main_emotion);
+    const jsonData = await resp.json();
+
+    context.log(jsonData);
+
     context.res = {
-        body: {
-            result
-        }
+        body: jsonData.data.url
     };
     console.log(result)
     context.done();
 }
 
 async function analyzeImage(img) {
-    const subscriptionKey = process.env.SUBSCRIPTIONKEY;
-    const uriBase = process.env.ENDPOINT + '/face/v1.0/detect';
+    // const subscriptionKey = process.env.SUBSCRIPTIONKEY;
+    const subscriptionKey = "f1c515cbfc374e8b83937d241c2242d8";
+    // const uriBase = process.env.ENDPOINT + '/face/v1.0/detect';
+    const uriBase = "https://democampfaceapi.cognitiveservices.azure.com" + "/face/v1.0/detect";
 
     let params = new URLSearchParams({
         'returnFaceId': 'true',
